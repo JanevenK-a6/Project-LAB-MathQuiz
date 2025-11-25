@@ -6,6 +6,7 @@ int main() {
 
        int mainMenu;
        // Main menu
+       menu:
        printf("Welcome to the Math Quiz!\n");
        printf("\n");
        printf("1. Start the quiz\n");
@@ -35,6 +36,14 @@ int main() {
                      scanf("%d", &answer);
                      if(answer == num1Easy + num2Easy){
                             printf("Correct!\n"); // Jika jawaban benar
+                            printf("Do you want to play again? (y/n)");
+                            char yesNo;
+                            scanf("%c", &yesNo);
+                            if(yesNo == 'Y' || 'y'){
+                                   goto menu;
+                            } else{
+                                   break;
+                            }
                      }
                      else{
                             printf("Incorrect. Try Again!\n");
@@ -44,7 +53,14 @@ int main() {
                             scanf("%d", &answer);
                                    if(answer == num1Easy + num2Easy){
                                           printf("Correct!\n"); // Jika jawaban benar
-                                          break;
+                                          printf("Do you want to play again? (y/n)");
+                                          char yesNo;
+                                          scanf("%c", &yesNo);
+                                          if(yesNo == 'Y' || 'y'){
+                                                 goto menu;
+                                          } else{
+                                                 break;
+                                          }
                                    }
                                    else{
                                           printf("Incorrect. Try Again!\n"); // Jika jawaban salah
