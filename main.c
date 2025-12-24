@@ -1,141 +1,129 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+
+// to define a structure to hold the player's data
+struct Player {
+	char name[50];
+	int score;
+};
+
+void saveScore(char name[], int score);
+void displayLeaderboard();
+void searchPlayer(char searchName[]);
+
 
 int main() {
+    int mainMenu, mode, answer, correctResult;
+	int num1, num2, min, max, currentScore = 0;
+	char playerName[50], yesNo;
+    int keepPlaying = 1;
 
-    int mainMenu;
-    // Main menu
-    menu:
-	printf("Welcome to the Math Quiz!\n");
-    printf("\n");
-    printf("1. Start the quiz\n");
-    printf("2. Exit\n");
+	srand(time(NULL)); // Seed randomizer once at the start
+
+    printf("Enter your name to start: ");
+    scanf("%s", playerName);
+
+	//Main Menu
+ while (keepPlaying) {
+        printf("\n=== Welcome to the Math Quiz ===\n");
+        printf("1. Start the quiz\n");
+        printf("2. View the Leaderboard\n");
+        printf("3. Search for a Player\n");
+        printf("4. Exit\n");
+        printf("Choice: ");
+        scanf("%d", &mainMenu);
        
     // Mode selection menu
-    scanf("%d", &mainMenu);
-    if(mainMenu == 1){
-        int mode;
-        printf("Select mode\n"); 
-        printf("1. Easy\n");
-        printf("2. Medium\n");
-        printf("3. Hard\n");
-        printf("4. Back to main menu\n");
-        scanf("%d", &mode);
-        
-        if(mode == 1){
-            printf("Easy mode selected\n");
-            // Start easy mode quiz
-            srand(time(NULL));
-            int minEasy = 1; // Angka minimum untuk easy mode
-            int maxEasy = 20; // Angka maksimum untuk easy mode
-            int num1Easy = (rand() % (maxEasy - minEasy + 1)) + minEasy; // Generate random number interval 1 - 20
-            int num2Easy = (rand() % (maxEasy - minEasy + 1)) + minEasy; // Generate random number interval 1 - 20
-            int randomNumber = (rand() % (maxEasy - minEasy + 1)) + minEasy;
-            int answer;
-            printf("What is %d + %d?\n", num1Easy, num2Easy);
-            scanf("%d", &answer);
-            
-            if(answer == num1Easy + num2Easy){
-                printf("Correct!\n"); // Jika jawaban benar
-                break;
-        	}
-            else{
-                printf("Incorrect. Try Again!\n");
-                // Ask the question again (loop) until its correct
-                while(1){
-                    printf("What is %d + %d?\n", num1Easy, num2Easy);
-                    scanf("%d", &answer);
-                    
-                    if(answer == num1Easy + num2Easy){
-                        printf("Correct!\n"); // Jika jawaban benar
-                        break;
-                    }
-                    else{
-                        printf("Incorrect. Try Again!\n"); // Jika jawaban salah
-                    }
+	if (mainMenu == 1) {
+        printf("\nSelect Mode: \n");
+        printf("1. Easy (10 Points)\n");
+        printf("2. Medium (20 Points)\n");
+        printf("3. Hard (30 Points)\n");
+        printf("Choice:\n");
+            scanf("%d", &mode);
+
+
+		//Ranges setting based on difficulty
+                   // Set ranges based on mode
+            if (mode == 1) {min = 1; max = 20; } 
+            else if (mode == 2) {min = 21; max = 50; } 
+            else if (mode == 3) {min = 51; max = 100; }
+            else {printf("Invalid mode!\n"); continue; }
+
+            // Generate Numbers
+            num1 = (rand() % (max - min + 1)) + min;
+            num2 = (rand() % (max - min + 1)) + min;
+            correctResult = (mode == 1) ? (num1 + num2) : (num1 * num2);
+
+            // Quiz Loop (stays on this question until correct)
+            while (1) {
+                printf("What is %d %s %d? ", num1, (mode == 1 ? "+" : "x"), num2);
+                scanf("%d", &answer);
+                if (answer == correctResult) {
+                    int points = (mode == 1) ? 10 : (mode == 2 ? 20: 30);
+                    currentScore += points;
+                    printf("Correct! +%d points. Current Total: %d\n", points, currentScore);
+                    break; // Exit the question loop
+                } else {
+                    printf("Incorrect. Try Again!\n");
                 }
             }
+        } 
+        else if (mainMenu == 2) {
+            displayLeaderboard();
         }
-        else if(mode == 2){
-            printf("Medium mode selected\n");
-            // Start medium mode quiz
-            srand(time(NULL));
-            int minMedium = 21; // Angka minimum untuk medium mode
-            int maxMedium = 50; // Angka maksimum untuk medium mode
-            int num1Medium = (rand() % (maxMedium - minMedium + 1)) + minMedium; // Generate random number interval 21 - 50
-            int num2Medium = (rand() % (maxMedium - minMedium + 1)) + minMedium; // Generate random number interval 21 - 50
-            int randomNumber = (rand() % (maxMedium - minMedium + 1)) + minMedium;
-            int answer;
-            printf("What is %d x %d?\n", num1Medium, num2Medium);
-            scanf("%d", &answer);
-            
-            if(answer == num1Medium * num2Medium){
-                printf("Correct!\n"); // Jika jawaban benar
-            }
-            else{
-                printf("Incorrect. Try Again!\n"); // Jika jawaban salah
-                // Ask the question again (loop) until its correct
-                while(1){
-                    printf("What is %d x %d?\n", num1Medium, num2Medium);
-                    scanf("%d", &answer);
-                    
-                    if(answer == num1Medium * num2Medium){
-                        printf("Correct!\n"); // Jika jawaban benar
-                        break;
-                    }
-                    else{
-                        printf("Incorrect. Try Again!\n"); // Jika jawaban salah
-                    }
-                }
-            }
-    	}
-        else if(mode == 3){
-            printf("Hard mode selected\n");
-            // Start hard mode quiz
-            srand(time(NULL));
-            int minHard = 51; // Angka minimum untuk hard mode
-            int maxHard = 100; // Angka maksimum untuk hard mode
-            int num1Hard = (rand() % (maxHard - minHard + 1)) + minHard; // Generate random number interval 51 - 100
-            int num2Hard = (rand() % (maxHard - minHard + 1)) + minHard; // Generate random number interval 51 - 100
-            int randomNumber = (rand() % (maxHard - minHard + 1)) + minHard;
-            int answer;
-            printf("What is %d x %d?\n", num1Hard, num2Hard);
-            scanf("%d", &answer);
-            
-            if(answer == num1Hard * num2Hard){
-                printf("Correct!\n"); // Jika jawaban benar
-            }
-            else{
-                printf("Incorrect. Try Again!\n"); // Jika jawaban salah
-                // Ask the question again (loop) until its correct
-                while(1){
-                    printf("What is %d x %d?\n", num1Hard, num2Hard);
-                    scanf("%d", &answer);
-                    if(answer == num1Hard * num2Hard){
-                        printf("Correct!\n"); // Jika jawaban benar
-                        break;
-                    }
-                    else{
-                        printf("Incorrect. Try Again!\n"); // Jika jawaban salah
-                    }
-                }
-            }
+        else if (mainMenu == 3) {
+            char sName[50];
+            printf("Enter name to search: ");
+            scanf("%s", sName);
+            searchPlayer(sName);
         }
-        else if(mode == 4){
-            main(); // Back to main menu
+        else if (mainMenu == 4) {
+            saveScore(playerName, currentScore);
+            printf("Score saved. Goodbye %s!\n", playerName);
+            keepPlaying = 0;
         }
-        else{
-            printf("Invalid input\n"); // Input tidak sesuai dengan pilihan
-    	}
-	}
-    else if(mainMenu == 2){
-        return 0; // Exit the program
     }
-    else{
-        printf("Invalid input\n"); // Input tidak sesuai dengan pilihan
+
+    return 0;
+}
+
+void saveScore(char name[], int score) {
+    FILE *fp = fopen("leaderboard.txt", "a");
+    if (fp == NULL) return;
+    fprintf(fp, "%s %d\n", name, score);
+    fclose(fp);
+}
+
+void displayLeaderboard() {
+    struct Player players [100];
+    int count = 0;
+    FILE *fp = fopen("leaderboard.txt", "r");
+
+    if (fp == NULL) {
+        printf("No records found.\n");
+        return;
     }
-       
-           
-	return 0;
+
+    while (fscanf(fp, "%s %d", players[count].name, &players[count].score) != EOF) {
+        count ++;
+    }
+    fclose(fp);
+
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (players[j].score < players[j+1].score) {
+                struct Player temp = players[j];
+                players[j] = players[j+1];
+                players[j+1] = temp;
+            }
+        }
+    }
+
+    printf("\n--- LEADERBOARD ---\n");
+    for (int i = 0; i < count; i++) {
+        printf("%d. %s - %d points\n", i + 1, players[i].name,players[i].score);
+    }
 }
